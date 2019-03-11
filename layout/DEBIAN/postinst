@@ -1,0 +1,119 @@
+MODEL=$(uname -m)
+case ${MODEL} in
+	iPhone6,1 | iPhone6,2 | iPhone8,4)
+    X=640 Y=1136;;
+	iPhone7,2 | iPhone8,1 | iPhone9,1 | iPhone9,3 | iPhone10,1 | iPhone10,4)
+    X=750 Y=1334;;
+	iPhone7,1 | iPhone8,2 | iPhone9,2 | iPhone9,4 | iPhone10,2 | iPhone10,5)
+    X=1080 Y=1920;;
+	iPhone10,3 | iPhone10,6)
+    X=1125 Y=2436;;
+esac
+echo 当前设备 ${MODEL} !
+echo ${X}x${Y} 是你的默认分辨率.
+echo 创建原生 IOMobileGraphicsFamily.plist...
+if [ -f /private/var/mobile/Library/Preferences/com.apple.iokit.IOMobileGraphicsFamily.plist ]; then
+	rm -f /private/var/mobile/Library/Preferences/com.apple.iokit.IOMobileGraphicsFamily.plist
+fi
+cat > /private/var/mobile/Library/Preferences/com.apple.iokit.IOMobileGraphicsFamily.plist << EOF
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>canvas_height</key>
+	<integer>${Y}</integer>
+	<key>canvas_width</key>
+	<integer>${X}</integer>
+</dict>
+</plist>
+EOF
+chmod 0755 /private/var/mobile/Library/Preferences/com.apple.iokit.IOMobileGraphicsFamily.plist
+echo 默认 IOMobileGraphicsFamily.plist 已创建!
+echo 创建分辨率文件...
+if [ ! -f /private/var/mobile/Library/Preferences/com.apple.iokit.IOMobileGraphicsFamily.plist.setrestarget.bak ]; then
+	cp /private/var/mobile/Library/Preferences/com.apple.iokit.IOMobileGraphicsFamily.plist /private/var/mobile/Library/Preferences/com.apple.iokit.IOMobileGraphicsFamily.plist.setrestarget.bak
+fi
+cp /private/var/mobile/Library/Preferences/com.apple.iokit.IOMobileGraphicsFamily.plist /private/var/mobile/Library/Preferences/com.apple.iokit.IOMobileGraphicsFamily.plist.setresoriginal.bak
+
+echo 拷贝守护进程...
+if [ -d /private/var/containers/Bundle/iosbinpack64/ ]; then
+	cat > /private/var/containers/Bundle/iosbinpack64/LaunchDaemons/com.horizon.setres.setrestarget.plist<< EOF
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Label</key>
+	<string>com.horizon.setres.setrestarget</string>
+	<key>LaunchOnlyOnce</key>
+	<true/>
+	<key>ProgramArguments</key>
+	<array>
+		<string>/var/containers/Bundle/iosbinpack64/bin/bash</string>
+		<string>-c</string>
+		<string>/private/var/containers/Bundle/iosbinpack64/bin/cp /private/var/mobile/Library/Preferences/com.apple.iokit.IOMobileGraphicsFamily.plist.setrestarget.bak /private/var/mobile/Library/Preferences/com.apple.iokit.IOMobileGraphicsFamily.plist ; /var/containers/Bundle/iosbinpack64/usr/bin/killall cfprefsd</string>
+	</array>
+	<key>RunAtLoad</key>
+	<true/>
+</dict>
+</plist>
+EOF
+	cat > /private/var/containers/Bundle/iosbinpack64/LaunchDaemons/com.horizon.setres.setresoriginal.plist << EOF
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Label</key>
+	<string>com.horizon.setres.setresoriginal</string>
+	<key>LaunchOnlyOnce</key>
+	<true/>
+	<key>ProgramArguments</key>
+	<array>
+		<string>/private/var/containers/Bundle/iosbinpack64/bin/cp</string>
+		<string>/private/var/mobile/Library/Preferences/com.apple.iokit.IOMobileGraphicsFamily.plist.setresoriginal.bak</string>
+		<string>/private/var/mobile/Library/Preferences/com.apple.iokit.IOMobileGraphicsFamily.plist</string>
+	</array>
+	<key>RunAtLoad</key>
+	<false/>
+	<key>StartInterval</key>
+	<integer>30</integer>
+</dict>
+</plist>
+EOF
+chmod 0644 /private/var/containers/Bundle/iosbinpack64/LaunchDaemons/com.horizon.setres.setresoriginal.plist
+chmod 0644 /private/var/containers/Bundle/iosbinpack64/LaunchDaemons/com.horizon.setres.setrestarget.plist
+chown root:wheel /private/var/containers/Bundle/iosbinpack64/LaunchDaemons/com.horizon.setres.setresoriginal.plist
+chown root:wheel /private/var/containers/Bundle/iosbinpack64/LaunchDaemons/com.horizon.setres.setrestarget.plist
+else
+	cat > /private/etc/rc.d/betterres << EOF
+#!/bin/bash
+/bin/cp /private/var/mobile/Library/Preferences/com.apple.iokit.IOMobileGraphicsFamily.plist.setrestarget.bak /private/var/mobile/Library/Preferences/com.apple.iokit.IOMobileGraphicsFamily.plist
+EOF
+
+	cat > /Library/LaunchDaemons/com.horizon.setres.setresoriginal.plist << EOF
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Label</key>
+	<string>com.horizon.setres.setresoriginal</string>
+	<key>LaunchOnlyOnce</key>
+	<true/>
+	<key>ProgramArguments</key>
+	<array>
+		<string>/bin/cp</string>
+		<string>/private/var/mobile/Library/Preferences/com.apple.iokit.IOMobileGraphicsFamily.plist.setresoriginal.bak</string>
+		<string>/private/var/mobile/Library/Preferences/com.apple.iokit.IOMobileGraphicsFamily.plist</string>
+	</array>
+	<key>RunAtLoad</key>
+	<false/>
+	<key>StartInterval</key>
+	<integer>30</integer>
+</dict>
+</plist>
+EOF
+    chmod 0777 /private/etc/rc.d/betterres
+    chmod 0644 /Library/LaunchDaemons/com.horizon.setres.setresoriginal.plist
+   	chown root:wheel /Library/LaunchDaemons/com.horizon.setres.setresoriginal.plist
+fi
+echo 安装完成，请进入设置面板进行相关设置！
+# echo 安装完成，在以下文件中设置你的分辨率并重启重新越狱 /private/var/mobile/Library/Preferences/com.apple.iokit.IOMobileGraphicsFamily.plist.setrestarget.bak!

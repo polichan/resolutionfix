@@ -1,0 +1,14 @@
+echo "还原默认分辨率并移除相关文件..."
+rm /private/var/mobile/Library/Preferences/com.apple.iokit.IOMobileGraphicsFamily.plist.setrestarget.bak
+mv /private/var/mobile/Library/Preferences/com.apple.iokit.IOMobileGraphicsFamily.plist.setresoriginal.bak /private/var/mobile/Library/Preferences/com.apple.iokit.IOMobileGraphicsFamily.plist
+echo "移除相关文件中..."
+{
+    rm /private/var/mobile/com.nactro.resolutionfix.plain.dat
+    rm /private/var/mobile/com.nactro.resolutionfix.dat
+    rm /private/var/containers/Bundle/iosbinpack64/LaunchDaemons/com.horizon.setres.setresoriginal.plist
+    rm /private/var/containers/Bundle/iosbinpack64/LaunchDaemons/com.horizon.setres.setrestarget.plist
+    rm /Library/LaunchDaemons/com.horizon.setres.setresoriginal.plist
+    rm /Library/LaunchDaemons/com.horizon.setres.setrestarget.plist
+    rm /private/etc/rc.d/betterres
+} &> /dev/null
+echo "卸载完成，请重启并重新越狱！!"

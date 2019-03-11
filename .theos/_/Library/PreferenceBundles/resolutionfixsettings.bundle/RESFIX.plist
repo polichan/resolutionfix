@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>items</key>
+	<array>
+		<dict>
+<key>cell</key>
+<string>PSGroupCell</string>
+<key>label</key>
+<string>BlankCell</string>
+</dict>
+
+
+<dict>
+<key>cell</key>
+<string>PSGroupCell</string>
+<key>label</key>
+<string>选择分辨率</string>
+<key>footerText</key>
+<string>4代表4.0英寸设备的分辨率，以此类推
+当你需要还原原生分辨率，则选择原生后点击下方还原按钮</string>
+</dict>
+<dict>
+						<key>cell</key>
+						<string>PSSegmentCell</string>
+						<key>validValues</key>
+						<array>
+								<integer>0</integer>
+								<integer>1</integer>
+								<integer>2</integer>
+								<integer>3</integer>
+							<!--	<integer>4</integer> -->
+						</array>
+						<key>validTitles</key>
+						<array>
+								<string>原生</string>
+								<string>4</string>
+								<string>4.7</string>
+								<string>5.5</string>
+							<!--	<string>X</string> -->
+						</array>
+						<key>default</key>
+						<integer>0</integer>
+						<key>defaults</key>
+						<string>com.nactro.resolutionfixsettings</string>
+						<key>key</key>
+						<string>resolutionPrefsStyle</string>
+</dict>
+<dict>
+<key>action</key>
+<string>saveConfig</string>
+<key>label</key>
+<string>保存分辨率设置</string>
+<key>cell</key>
+<string>PSButtonCell</string>
+</dict>
+<dict>
+<key>action</key>
+<string>backToOriginalRes</string>
+<key>label</key>
+<string>还原原生分辨率</string>
+<key>cell</key>
+<string>PSButtonCell</string>
+</dict>
+
+<dict>
+<key>cell</key>
+<string>PSGroupCell</string>
+<key>label</key>
+<string>支持我们</string>
+<key>footerText</key>
+<string>如果可以，请赞助或关注下面官方微博～</string>
+</dict>
+<dict>
+<key>action</key>
+<string>openDonate</string>
+<key>label</key>
+<string>赞助我们团队</string>
+<key>cell</key>
+<string>PSButtonCell</string>
+</dict>
+
+<dict>
+<key>label</key>
+<string>团队展示</string>
+<key>footerText</key>
+<string>© Nectra Development 2019</string>
+<key>cell</key>
+<string>PSGroupCell</string>
+</dict>
+
+<dict>
+<key>creditOptions</key>
+<array>
+	<dict>
+		<key>service</key>
+		<string>website</string>
+		<key>username</key>
+		<string>https:/apt.nactro.com</string>
+	</dict>
+	<dict>
+		<key>service</key>
+		<string>weibo</string>
+		<key>username</key>
+		<string>5788815698</string>
+	</dict>
+	<dict>
+		<key>service</key>
+		<string>email</string>
+		<key>username</key>
+		<string>NactroDev@Gmail.com</string>
+	</dict>
+	<dict>
+		<key>service</key>
+		<string>github</string>
+		<key>username</key>
+		<string>nactro</string>
+	</dict>
+</array>
+<key>avatarImage</key>
+<string>nactro.png</string>
+<key>creditPosition</key>
+<string>Development Group</string>
+<key>creditName</key>
+<string>Nactro.</string>
+<key>height</key>
+<integer>84</integer>
+<key>cellClass</key>
+<string>NactroCreditCell</string>
+</dict>
+
+	</array>
+	<key>title</key>
+	<string>分辨率修改</string>
+</dict>
+</plist>

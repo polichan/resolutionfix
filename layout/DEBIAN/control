@@ -1,0 +1,9 @@
+Package: com.nactro.resolutionfix
+Name: 分辨率修改
+Depends: mobilesubstrate
+Version: 1.0.2
+Architecture: iphoneos-arm
+Description: 分辨率修改试用版，不支持 iPhone X 机型。
+Maintainer: Nactro
+Author: Nactro
+Section: Tweaks
